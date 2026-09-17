@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react';
+import UserCard from './UserCard';
+import PostList from './PostList';
 
 function App(){
 const [users,setUsers] = useState([]);
 const [loading,setLoading] = useState(true);
-const [error,setError] = useState(null);
+const [selectedUserId,setSelectedUserId] = useState(1);
 
 
 useEffect(() => {
@@ -17,7 +19,6 @@ useEffect(() => {
         setLoading(false)
       })
       .catch(err => {
-        setError(err.message)
         setLoading(false)
       })
   }, 2000) // 2 second delay to see loading
@@ -25,15 +26,18 @@ useEffect(() => {
 
 
 if(loading) return <p>Loading...</p>
-if(error) return <p>Error: {error}</p>
   return (
     <div>
+      <h1>User Dashbard</h1>
+    <div>
       {users.map(user=>(
-        <div key={user.id}>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
+        <div key={user.id} onClick={()=>setSelectedUserId(user.id)} style={{border: '1px solid black', padding: '10px', margin: '10px', cursor: 'pointer'}}>
+          <UserCard user={user} />
         </div>
       ))}
+    </div>
+      <h2>Post of {selectedUserId}</h2>
+    <PostList userId={selectedUserId} />
     </div>
   )
 }
