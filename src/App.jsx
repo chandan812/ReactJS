@@ -1,44 +1,25 @@
-import {useState, useEffect} from 'react';
-import UserCard from './UserCard';
-import PostList from './PostList';
+import { BrowserRouter, Link,Routes,Route } from "react-router-dom";
+import Home from "./Home";
+import Users from "./Users";
+import UserDetails from "./UserDetails";
+import NotFound from "./NotFound";
 
-function App(){
-const [users,setUsers] = useState([]);
-const [loading,setLoading] = useState(true);
-const [selectedUserId,setSelectedUserId] = useState(1);
+function App() {
+  return(
+    <BrowserRouter>
+     <nav style={{display: 'flex', gap: '10px',padding: '10px', borderBottom: '1px solid black'}}> 
+        <Link to="/">Home</Link>
+        <Link to="/users">Users</Link>
+     </nav>
 
+     <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/users" element={<Users />} />
+      <Route path="/users/:id" element={<UserDetails />} />
+      <Route path="*" element={<NotFound />} />
+     </Routes>
 
-useEffect(() => {
-  setLoading(true)
-  
-  setTimeout(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data)
-        setLoading(false)
-      })
-      .catch(err => {
-        setLoading(false)
-      })
-  }, 2000) // 2 second delay to see loading
-}, [])
-
-
-if(loading) return <p>Loading...</p>
-  return (
-    <div>
-      <h1>User Dashbard</h1>
-    <div>
-      {users.map(user=>(
-        <div key={user.id} onClick={()=>setSelectedUserId(user.id)} style={{border: '1px solid black', padding: '10px', margin: '10px', cursor: 'pointer'}}>
-          <UserCard user={user} />
-        </div>
-      ))}
-    </div>
-      <h2>Post of {selectedUserId}</h2>
-    <PostList userId={selectedUserId} />
-    </div>
+    </BrowserRouter>
   )
 }
 export default App;
